@@ -54,6 +54,7 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.4.0") // Untuk AsyncImage
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.animation:animation")
+    implementation("androidx.compose.material:material-icons-extended")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

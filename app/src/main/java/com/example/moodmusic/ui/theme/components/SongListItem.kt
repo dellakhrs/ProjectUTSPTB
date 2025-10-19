@@ -2,7 +2,7 @@ package com.example.moodmusic.ui.theme.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,5 +22,5 @@ fun SongListItem(song: Song, onClick: (Int) -> Unit) {
         modifier = Modifier.clickable { onClick(song.id) }
     )
     // Garis pemisah antar item
-    Divider(Modifier.padding(horizontal = 16.dp))
+    HorizontalDivider(Modifier.padding(horizontal = 16.dp))
 }

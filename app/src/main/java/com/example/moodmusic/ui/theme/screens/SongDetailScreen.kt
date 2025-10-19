@@ -2,7 +2,6 @@ package com.example.moodmusic.ui.theme.screens
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -11,13 +10,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.yourpackage.moodmusic.data.getSongById
+import com.example.moodmusic.data.getSongById
 import kotlinx.coroutines.launch
+import androidx.compose.ui.draw.clip
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SongDetailScreen(songId: Int, onBackClick: () -> Unit) {
     val song = getSongById(songId)
