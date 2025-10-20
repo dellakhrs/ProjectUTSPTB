@@ -15,7 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.moodmusic.R // Untuk logo aplikasi
+import com.example.moodmusic.R
 import androidx.compose.ui.res.painterResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,18 +41,15 @@ fun AboutScreen(onBackClick: () -> Unit) {
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-            // Logo Aplikasi (Menggunakan placeholder icon)
             Image(
                 painter = painterResource(id = R.drawable.logo_aplikasi),
                 contentDescription = "Logo MoodMusic",
                 contentScale = ContentScale.Fit,
-                modifier = Modifier.size(96.dp).padding(top = 16.dp) // Ukuran yang lebih besar
+                modifier = Modifier.size(96.dp).padding(top = 16.dp)
             )
 
             Spacer(Modifier.height(8.dp))
 
-            // Nama dan Versi
             Text(
                 text = "MoodMusic",
                 style = MaterialTheme.typography.headlineMedium,
@@ -66,11 +63,9 @@ fun AboutScreen(onBackClick: () -> Unit) {
 
             Spacer(Modifier.height(32.dp))
 
-            // Garis Pembatas
             HorizontalDivider()
             Spacer(Modifier.height(24.dp))
 
-            // Deskripsi Singkat
             Text(
                 text = "MoodMusic adalah aplikasi pemutar musik revolusioner yang dirancang khusus untuk memahami dan melayani suasana hati Anda. Kami percaya bahwa musik yang tepat dapat mengubah hari Anda, dan itulah mengapa kami mengorganisasi perpustakaan kami berdasarkan emosi, bukan hanya genre.",
                 style = MaterialTheme.typography.bodyLarge,
@@ -80,7 +75,6 @@ fun AboutScreen(onBackClick: () -> Unit) {
 
             Spacer(Modifier.height(16.dp))
 
-            // Fitur Utama
             Text(
                 text = "Fitur Unggulan:",
                 style = MaterialTheme.typography.titleMedium,
@@ -94,7 +88,6 @@ fun AboutScreen(onBackClick: () -> Unit) {
 
             Spacer(Modifier.height(24.dp))
 
-            // Footer
             Text(
                 text = "© 2025 Della Khairunnisa. Dibuat dengan Jetpack Compose.",
                 style = MaterialTheme.typography.labelSmall,
@@ -104,7 +97,6 @@ fun AboutScreen(onBackClick: () -> Unit) {
     }
 }
 
-// Komponen Pembantu untuk Bullet Point
 @Composable
 fun BulletPointText(text: String) {
     Row(

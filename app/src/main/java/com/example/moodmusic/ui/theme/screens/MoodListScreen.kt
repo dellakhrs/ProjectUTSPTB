@@ -25,7 +25,7 @@ import androidx.compose.material.icons.filled.Menu
 fun MoodListScreen(
     moods: List<Mood>,
     onMoodClick: (Int) -> Unit,
-    onMenuClick: () -> Unit // <-- TAMBAHKAN PARAMETER INI
+    onMenuClick: () -> Unit
 ) {
 
     var searchText by remember { mutableStateOf("") }
@@ -51,9 +51,8 @@ fun MoodListScreen(
                         )
                     }
                 },
-                // TAMBAHKAN NAVIGATION ICON UNTUK MEMBUKA DRAWER
                 navigationIcon = {
-                    IconButton(onClick = onMenuClick) { // <-- Panggil aksi dari AppNavHost
+                    IconButton(onClick = onMenuClick) {
                         Icon(Icons.Default.Menu, contentDescription = "Menu Drawer")
                     }
                 }
@@ -67,8 +66,6 @@ fun MoodListScreen(
                 .padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-            // ============== KOLOM SEARCH BAR ==============
             OutlinedTextField(
                 value = searchText,
                 onValueChange = { searchText = it },
@@ -81,13 +78,11 @@ fun MoodListScreen(
                     .padding(vertical = 16.dp)
             )
 
-            // Daftar Mood (LazyColumn)
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
                 contentPadding = PaddingValues(bottom = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                // Menggunakan daftar yang sudah difilter
                 items(filteredMoods) { mood ->
                     MoodCard(mood = mood, onClick = onMoodClick)
                 }

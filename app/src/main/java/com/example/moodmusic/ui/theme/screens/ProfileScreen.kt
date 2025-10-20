@@ -39,13 +39,10 @@ fun ProfileScreen() {
                 .padding(horizontal = 24.dp, vertical = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-            // Area Foto Profil
             ProfilePicture(R.drawable.foto_della)
 
             Spacer(Modifier.height(30.dp))
 
-            // Nama Pengguna
             Text(
                 text = "Della Khairunnisa",
                 style = MaterialTheme.typography.headlineLarge,
@@ -55,32 +52,24 @@ fun ProfileScreen() {
 
             Spacer(Modifier.height(4.dp))
 
-            // Status atau Role
             Text(
                 text = "Pengguna MoodMusic Premium",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.secondary
             )
-
-            // GARIS PEMISAH LEBIH MENARIK
             HorizontalDivider(
                 modifier = Modifier.padding(vertical = 24.dp),
                 thickness = 1.dp,
                 color = MaterialTheme.colorScheme.outlineVariant
             )
-
-            // Detail Kontak/Akun dalam bentuk Card
-
-            // 1. DETAIL BERGABUNG SEJAK (FITUR BARU)
             ProfileDetailCard(
-                icon = Icons.Default.DateRange, // Icon Kalender/Tanggal
+                icon = Icons.Default.DateRange,
                 label = "Bergabung Sejak",
                 value = "13 Oktober 2025"
             )
 
             Spacer(Modifier.height(16.dp))
 
-            // 2. DETAIL EMAIL
             ProfileDetailCard(
                 icon = Icons.Default.Mail,
                 label = "Email",
@@ -88,8 +77,6 @@ fun ProfileScreen() {
             )
 
             Spacer(Modifier.height(16.dp))
-
-            // 3. DETAIL TIPE AKUN
             ProfileDetailCard(
                 icon = Icons.Default.Person,
                 label = "Tipe Akun",
@@ -99,7 +86,6 @@ fun ProfileScreen() {
     }
 }
 
-// Fungsi ProfilePicture sudah dioptimalkan sebelumnya
 @Composable
 fun ProfilePicture(drawableId: Int) {
     Image(
@@ -112,7 +98,6 @@ fun ProfilePicture(drawableId: Int) {
     )
 }
 
-// Fungsi ProfileDetailCard tidak berubah
 @Composable
 fun ProfileDetailCard(icon: ImageVector, label: String, value: String) {
     Card(

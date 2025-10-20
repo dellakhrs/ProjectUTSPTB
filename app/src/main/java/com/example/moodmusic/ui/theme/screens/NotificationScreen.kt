@@ -22,7 +22,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import com.example.moodmusic.data.getNotificationById
 
-// --- SCREEN UTAMA NOTIFIKASI ---
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotificationScreen(onNotificationClick: (Int) -> Unit) {
@@ -30,7 +29,6 @@ fun NotificationScreen(onNotificationClick: (Int) -> Unit) {
         topBar = {
             TopAppBar(
                 title = { Text("Notifikasi") },
-                // Tambahkan Badge Indikator Notifikasi Belum Dibaca
                 actions = {
                     val unreadCount = sampleNotifications.count { !it.isRead }
                     if (unreadCount > 0) {
@@ -63,16 +61,12 @@ fun NotificationScreen(onNotificationClick: (Int) -> Unit) {
     }
 }
 
-// --- KOMPONEN ITEM NOTIFIKASI ---
 @Composable
 fun NotificationItem(notification: Notification, onClick: () -> Unit) {
-    // Warna Latar Belakang: Lebih terang jika belum dibaca
     val backgroundColor = if (notification.isRead)
         MaterialTheme.colorScheme.surface
     else
         MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.08f)
-
-    // Warna Ikon: Primary jika belum dibaca
     val iconTint = if (notification.isRead)
         MaterialTheme.colorScheme.onSurfaceVariant
     else
@@ -90,7 +84,6 @@ fun NotificationItem(notification: Notification, onClick: () -> Unit) {
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Icon Notifikasi
             Icon(
                 Icons.Filled.Notifications,
                 contentDescription = "Notification Icon",
@@ -100,14 +93,12 @@ fun NotificationItem(notification: Notification, onClick: () -> Unit) {
 
             Spacer(Modifier.width(16.dp))
 
-            // Konten Notifikasi
             Column(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
                     text = notification.title,
                     style = MaterialTheme.typography.titleMedium,
-                    // Judul dibold jika belum dibaca
                     fontWeight = if (notification.isRead) FontWeight.Normal else FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
@@ -128,8 +119,6 @@ fun NotificationItem(notification: Notification, onClick: () -> Unit) {
             }
 
             Spacer(Modifier.width(8.dp))
-
-            // Indikator Klik (Tanda Panah)
             Icon(
                 Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = "Lihat Detail",
@@ -139,11 +128,9 @@ fun NotificationItem(notification: Notification, onClick: () -> Unit) {
     }
 }
 
-// --- SCREEN DETAIL NOTIFIKASI ---
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotificationDetailScreen(notificationId: Int, onBackClick: () -> Unit) {
-    // Fungsi ini diasumsikan ada di SampleData.kt
     val notification = getNotificationById(notificationId)
 
     Scaffold(
@@ -165,7 +152,6 @@ fun NotificationDetailScreen(notificationId: Int, onBackClick: () -> Unit) {
                 .padding(horizontal = 16.dp, vertical = 8.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            // Judul Notifikasi
             Text(
                 text = notification?.title ?: "Notifikasi Tidak Ditemukan",
                 style = MaterialTheme.typography.headlineSmall,
@@ -173,7 +159,6 @@ fun NotificationDetailScreen(notificationId: Int, onBackClick: () -> Unit) {
                 modifier = Modifier.padding(bottom = 4.dp)
             )
 
-            // Tanggal Diterima
             Text(
                 text = "Diterima: ${notification?.date ?: "-"}",
                 style = MaterialTheme.typography.labelMedium,
@@ -183,11 +168,10 @@ fun NotificationDetailScreen(notificationId: Int, onBackClick: () -> Unit) {
 
             HorizontalDivider(modifier = Modifier.padding(bottom = 16.dp))
 
-            // Konten Detail
             Text(
                 text = notification?.detail ?: "Detail notifikasi tidak tersedia.",
                 style = MaterialTheme.typography.bodyLarge,
-                lineHeight = 26.sp, // Meningkatkan keterbacaan
+                lineHeight = 26.sp,
                 color = MaterialTheme.colorScheme.onBackground
             )
         }

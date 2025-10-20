@@ -6,11 +6,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-// Tambahkan import jika Anda ingin mengaktifkan dynamic color
-// import androidx.compose.material3.dynamicDarkColorScheme
-// import androidx.compose.material3.dynamicLightColorScheme
-// import androidx.compose.ui.platform.LocalContext
-// import android.os.Build
+
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -28,7 +24,7 @@ private val LightColorScheme = lightColorScheme(
 fun MoodMusicTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     moodColor: Color? = null,
-    content: @Composable () -> Unit // SINTAKSIS DIPERBAIKI
+    content: @Composable () -> Unit
 ) {
     val colorScheme = when {
 

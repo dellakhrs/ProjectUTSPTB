@@ -40,23 +40,19 @@ import kotlinx.coroutines.launch
 import com.example.moodmusic.ui.theme.screens.SettingsScreen
 
 object Routes {
-    // Navigasi Detail (Sub-Route)
     const val SONG_LIST = "songList/{moodId}"
     const val SONG_DETAIL = "songDetail/{songId}"
     const val NOTIFICATION_DETAIL = "notificationDetail/{notificationId}"
 
-    // Navigasi Root (Level 1, untuk Bottom Bar)
     const val HOME_ROOT = "homeRoot"
     const val NOTIFICATION_ROOT = "notificationRoot"
     const val PROFILE_ROOT = "profileRoot"
     const val SETTINGS_ROOT = "settingsRoot"
     const val ABOUT_ROOT = "aboutRoot"
 
-    // Container Root
-    const val MAIN_SCREEN = "mainScreen" // Start Destination utama
+    const val MAIN_SCREEN = "mainScreen"
 }
 
-// Data Class untuk Item Bottom Bar
 data class BottomNavItem(
     val route: String,
     val icon: ImageVector,
@@ -69,7 +65,6 @@ val bottomNavItems = listOf(
     BottomNavItem(Routes.PROFILE_ROOT, Icons.Default.AccountCircle, "Profil")
 )
 
-// Item Navigasi untuk Drawer
 data class DrawerItem(
     val route: String,
     val icon: ImageVector,
@@ -78,7 +73,7 @@ data class DrawerItem(
 
 val drawerItems = listOf(
     DrawerItem(Routes.HOME_ROOT, Icons.Default.Home, "Beranda"),
-    DrawerItem(Routes.SETTINGS_ROOT, Icons.Default.Settings, "Pengaturan"),
+    DrawerItem(Routes.SETTINGS_ROOT, Icons.Default.Settings, "Pengaturan")
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -88,49 +83,41 @@ fun MainScreen() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    // State untuk Drawer
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val scope = rememberCoroutineScope() // Coroutine scope untuk membuka/menutup drawer
+    val scope = rememberCoroutineScope()
 
-    // Tentukan apakah Bottom Bar harus ditampilkan
     val showBottomBar = currentRoute in bottomNavItems.map { it.route } ||
             currentRoute?.startsWith("songList") == true ||
             currentRoute?.startsWith("songDetail") == true ||
             currentRoute?.startsWith("notificationDetail") == true
 
-
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
-                // Header Drawer
                 Text(
                     "MoodMusic Menu",
                     style = MaterialTheme.typography.headlineSmall,
                     modifier = Modifier.padding(16.dp)
                 )
-                Divider()
+                HorizontalDivider()
                 Spacer(Modifier.height(8.dp))
 
-                // Item Navigasi Drawer
                 drawerItems.forEach { item ->
-                    // Cek apakah item yang sedang dibuka adalah rute root saat ini
                     val isSelected = currentRoute == item.route ||
-                            (item.route == Routes.HOME_ROOT && (currentRoute?.startsWith("songList") == true || currentRoute?.startsWith("songDetail") == true)) ||
-                            (item.route == Routes.SETTINGS_ROOT && currentRoute == Routes.SETTINGS_ROOT) // Logic untuk Settings
+                            (item.route == Routes.HOME_ROOT &&
+                                    (currentRoute?.startsWith("songList") == true ||
+                                            currentRoute?.startsWith("songDetail") == true))
 
                     NavigationDrawerItem(
                         icon = { Icon(item.icon, contentDescription = item.label) },
                         label = { Text(item.label) },
                         selected = isSelected,
                         onClick = {
-                            // Tutup drawer
                             scope.launch { drawerState.close() }
 
-                            // Navigasi ke rute yang dipilih jika belum berada di sana
                             if (!isSelected) {
                                 navController.navigate(item.route) {
-                                    // Atur popUpTo agar back stack dibersihkan jika navigasi antar root screen
                                     popUpTo(navController.graph.startDestinationId) {
                                         saveState = true
                                     }
@@ -144,20 +131,20 @@ fun MainScreen() {
                 }
             }
         },
-        // KONTEN UTAMA APLIKASI (SCFFOLD) HARUS DITEMPATKAN DI SINI
         content = {
             Scaffold(
-                // Tampilkan BottomBar hanya jika rute-nya adalah salah satu rute root atau detail yang terkait
                 bottomBar = {
                     if (showBottomBar) {
                         NavigationBar(
                             containerColor = MaterialTheme.colorScheme.surfaceContainer
                         ) {
                             bottomNavItems.forEach { item ->
-                                // Logika untuk menandai item yang dipilih
                                 val isSelected = currentRoute == item.route ||
-                                        (item.route == Routes.HOME_ROOT && (currentRoute?.startsWith("songList") == true || currentRoute?.startsWith("songDetail") == true)) ||
-                                        (item.route == Routes.NOTIFICATION_ROOT && currentRoute?.startsWith("notificationDetail") == true)
+                                        (item.route == Routes.HOME_ROOT &&
+                                                (currentRoute?.startsWith("songList") == true ||
+                                                        currentRoute?.startsWith("songDetail") == true)) ||
+                                        (item.route == Routes.NOTIFICATION_ROOT &&
+                                                currentRoute?.startsWith("notificationDetail") == true)
 
                                 NavigationBarItem(
                                     icon = { Icon(item.icon, contentDescription = item.label) },
@@ -180,34 +167,29 @@ fun MainScreen() {
                     }
                 }
             ) { padding ->
-                // NavHost untuk mengelola transisi layar di dalam Scaffold
                 NavHost(
                     navController = navController,
                     startDestination = Routes.HOME_ROOT,
                     Modifier.padding(padding)
                 ) {
-                    // =========================================================================
-                    // 1. ROOT SCREENS (Ditampilkan di Bottom Bar)
-                    // =========================================================================
-
-                    // HOME ROOT
                     composable(Routes.HOME_ROOT) {
-                        // Masukkan tombol menu di TopAppBar MoodListScreen agar drawer bisa dibuka
                         MoodListScreen(
                             moods = sampleMoods,
-                            onMoodClick = { moodId -> navController.navigate("songList/$moodId") },
-                            onMenuClick = { scope.launch { drawerState.open() } } // <-- Aksi Klik Menu
+                            onMoodClick = { moodId ->
+                                navController.navigate("songList/$moodId")
+                            },
+                            onMenuClick = { scope.launch { drawerState.open() } }
                         )
                     }
 
-                    // NOTIFICATION ROOT
                     composable(Routes.NOTIFICATION_ROOT) {
                         NotificationScreen(
-                            onNotificationClick = { notificationId -> navController.navigate("notificationDetail/$notificationId") }
+                            onNotificationClick = { notificationId ->
+                                navController.navigate("notificationDetail/$notificationId")
+                            }
                         )
                     }
 
-                    // PROFILE ROOT
                     composable(Routes.PROFILE_ROOT) {
                         ProfileScreen()
                     }
@@ -215,20 +197,14 @@ fun MainScreen() {
                     composable(Routes.SETTINGS_ROOT) {
                         SettingsScreen(
                             onMenuClick = { scope.launch { drawerState.open() } },
-                            navController = navController // <-- TERUSKAN NAVCONTROLLER UTAMA
+                            navController = navController
                         )
                     }
 
-                    // ABOUT ROOT (Rute Baru)
-                    composable(Routes.ABOUT_ROOT) { // <-- TAMBAHKAN RUTE BARU
+                    composable(Routes.ABOUT_ROOT) {
                         AboutScreen(onBackClick = { navController.popBackStack() })
                     }
 
-                    // =========================================================================
-                    // 2. NESTED SCREENS (Detail)
-                    // =========================================================================
-
-                    // Layar 2: Daftar Lagu
                     composable(
                         Routes.SONG_LIST,
                         arguments = listOf(navArgument("moodId") { type = NavType.IntType }),
@@ -254,12 +230,13 @@ fun MainScreen() {
                         val moodId = backStackEntry.arguments?.getInt("moodId") ?: 0
                         SongListScreen(
                             moodId = moodId,
-                            onSongClick = { songId -> navController.navigate("songDetail/$songId") },
+                            onSongClick = { songId ->
+                                navController.navigate("songDetail/$songId")
+                            },
                             onBackClick = { navController.popBackStack() }
                         )
                     }
 
-                    // Layar 3: Detail Lagu
                     composable(
                         Routes.SONG_DETAIL,
                         arguments = listOf(navArgument("songId") { type = NavType.IntType }),
@@ -283,7 +260,6 @@ fun MainScreen() {
                         )
                     }
 
-                    // Layar 4: Detail Notifikasi
                     composable(
                         Routes.NOTIFICATION_DETAIL,
                         arguments = listOf(navArgument("notificationId") { type = NavType.IntType }),
@@ -312,13 +288,10 @@ fun MainScreen() {
     )
 }
 
-
-// NavHost Utama (Mulai Aplikasi)
 @Composable
 fun AppNavHost() {
     val navController = rememberNavController()
 
-    // Start Destination sekarang adalah MainScreen yang memuat Bottom Bar
     NavHost(navController = navController, startDestination = Routes.MAIN_SCREEN) {
         composable(Routes.MAIN_SCREEN) {
             MainScreen()

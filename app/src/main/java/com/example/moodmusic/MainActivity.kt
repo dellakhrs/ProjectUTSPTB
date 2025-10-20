@@ -17,10 +17,9 @@ class MainActivity : ComponentActivity() {
     private var mediaPlayer: MediaPlayer? = null
     private val activeSongIdState = mutableIntStateOf(0)
 
-    // Implementasi AudioController
     private val audioController = object : AudioController {
         override fun play(audioUrl: String, songId: Int) {
-            stop() // hentikan lagu sebelumnya
+            stop()
             mediaPlayer = MediaPlayer().apply {
                 setDataSource(audioUrl)
                 setOnPreparedListener { start() }
@@ -28,20 +27,16 @@ class MainActivity : ComponentActivity() {
             }
             activeSongIdState.intValue = songId
         }
-
         override fun pause() {
             mediaPlayer?.pause()
         }
-
         override fun stop() {
             mediaPlayer?.stop()
             mediaPlayer?.release()
             mediaPlayer = null
         }
-
         override fun getActiveSongIdState() = activeSongIdState
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
