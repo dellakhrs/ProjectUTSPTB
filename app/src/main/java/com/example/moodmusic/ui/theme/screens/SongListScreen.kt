@@ -20,17 +20,23 @@ fun SongListScreen(moodId: Int, onSongClick: (Int) -> Unit, onBackClick: () -> U
     val mood = getMoodById(moodId)
     val songs = getSongsByMoodId(moodId)
     val moodName = mood?.name ?: "Unknown Mood"
+
+    // Menerapkan Tema Dinamis (HANYA SATU PANGGILAN TEMA)
     MoodMusicTheme(moodColor = mood?.primaryColor) {
+
+        // Menghitung warna TopAppBar yang dinamis di dalam scope tema
         val topAppBarColors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary,
             titleContentColor = MaterialTheme.colorScheme.onPrimary,
             navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
         )
-    MoodMusicTheme(moodColor = mood?.primaryColor) {
+
         Scaffold(
             topBar = {
                 TopAppBar(
                     title = { Text(moodName) },
+                    // PERBAIKAN: Menerapkan variabel topAppBarColors
+                    colors = topAppBarColors,
                     navigationIcon = {
                         IconButton(onClick = onBackClick) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -50,6 +56,5 @@ fun SongListScreen(moodId: Int, onSongClick: (Int) -> Unit, onBackClick: () -> U
                 }
             }
         }
-    }
     }
 }

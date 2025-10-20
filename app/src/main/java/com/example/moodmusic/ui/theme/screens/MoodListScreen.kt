@@ -16,21 +16,23 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.filled.Menu
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MoodListScreen(moods: List<Mood>, onMoodClick: (Int) -> Unit) {
+fun MoodListScreen(
+    moods: List<Mood>,
+    onMoodClick: (Int) -> Unit,
+    onMenuClick: () -> Unit // <-- TAMBAHKAN PARAMETER INI
+) {
 
-    // State lokal untuk mengelola input pencarian
     var searchText by remember { mutableStateOf("") }
-
-    // LOGIKA FILTERING (Akan dihitung ulang saat searchText atau moods berubah)
     val filteredMoods = remember(moods, searchText) {
         if (searchText.isBlank()) {
-            // Jika kolom pencarian kosong, tampilkan semua mood
             moods
         } else {
-            // Filter mood yang namanya mengandung teks pencarian (case-insensitive)
             moods.filter {
                 it.name.contains(searchText, ignoreCase = true)
             }
@@ -38,13 +40,31 @@ fun MoodListScreen(moods: List<Mood>, onMoodClick: (Int) -> Unit) {
     }
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Beranda MoodMusic") }) }
+        topBar = {
+            TopAppBar(
+                title = {
+                    Row {
+                        Text("Beranda ")
+                        Text(
+                            "MoodMusic",
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                },
+                // TAMBAHKAN NAVIGATION ICON UNTUK MEMBUKA DRAWER
+                navigationIcon = {
+                    IconButton(onClick = onMenuClick) { // <-- Panggil aksi dari AppNavHost
+                        Icon(Icons.Default.Menu, contentDescription = "Menu Drawer")
+                    }
+                }
+            )
+        }
     ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(horizontal = 16.dp), // Padding horizontal untuk keseluruhan konten
+                .padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
@@ -52,18 +72,19 @@ fun MoodListScreen(moods: List<Mood>, onMoodClick: (Int) -> Unit) {
             OutlinedTextField(
                 value = searchText,
                 onValueChange = { searchText = it },
-                label = { Text("Cari Mood (Happy, Chill, dll.)...") },
+                label = { Text("Cari Mood atau Lagu...") },
                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search Icon") },
                 singleLine = true,
+                shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 16.dp) // Padding atas dan bawah
+                    .padding(vertical = 16.dp)
             )
 
             // Daftar Mood (LazyColumn)
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
-                contentPadding = PaddingValues(bottom = 16.dp), // Padding bawah agar list tidak mentok
+                contentPadding = PaddingValues(bottom = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 // Menggunakan daftar yang sudah difilter

@@ -11,14 +11,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.moodmusic.R // Mengakses resource drawable
+import com.example.moodmusic.R
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.material.icons.filled.DateRange // <-- TAMBAHKAN ICON BARU
+import androidx.compose.material.icons.filled.DateRange
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,7 +36,7 @@ fun ProfileScreen() {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(horizontal = 24.dp, vertical = 16.dp), // Padding horizontal lebih besar
+                .padding(horizontal = 24.dp, vertical = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 

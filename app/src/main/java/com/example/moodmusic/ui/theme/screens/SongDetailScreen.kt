@@ -34,12 +34,8 @@ fun SongDetailScreen(songId: Int, onBackClick: () -> Unit) {
     val scope = rememberCoroutineScope()
     var imageLoaded by remember { mutableStateOf(false) }
     val context = LocalContext.current
-
-    // AKSES STATE GLOBAL: Dapatkan dan atur ID lagu yang sedang aktif
     var activeSongId by LocalActiveSongId.current
     val isPlayingThisSong = activeSongId == songId
-
-    // LOGIKA UI DINAMIS
     val buttonIcon = if (isPlayingThisSong) Icons.Filled.Pause else Icons.Filled.PlayArrow
     val buttonText = if (isPlayingThisSong) "Pause Music" else "Play Song (${song.duration})"
 
@@ -103,7 +99,7 @@ fun SongDetailScreen(songId: Int, onBackClick: () -> Unit) {
                 onClick = {
                     scope.launch {
                         if (isPlayingThisSong) {
-                            activeSongId = 0 // Reset state global
+                            activeSongId = 0
                             snackbarHostState.showSnackbar(message = "Paused ${song.title}...")
 
                         } else {

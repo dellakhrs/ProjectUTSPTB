@@ -19,3 +19,12 @@ data class Song(
     val duration: String,
     val audioUrl: String
 )
+
+data class Notification(
+    val id: Int,
+    val title: String,
+    val summary: String,
+    val detail: String,
+    val date: String,
+    val isRead: Boolean = false
+)

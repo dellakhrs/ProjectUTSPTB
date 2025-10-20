@@ -43,7 +43,6 @@ fun playAudio(context: Context, audioUrl: String) {
 }
 
 class MainActivity : ComponentActivity() {
-
     private val activeSongIdState = mutableStateOf(0)
     private var mediaPlayer: MediaPlayer? = null
 
