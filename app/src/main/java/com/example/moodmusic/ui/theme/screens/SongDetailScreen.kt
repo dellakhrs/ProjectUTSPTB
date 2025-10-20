@@ -1,25 +1,52 @@
 package com.example.moodmusic.ui.theme.screens
 
+import android.media.MediaPlayer
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.moodmusic.data.getSongById
-import kotlinx.coroutines.launch
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
-import com.example.moodmusic.playAudio
-import androidx.compose.material.icons.filled.Pause
 import com.example.moodmusic.LocalActiveSongId
+import kotlinx.coroutines.launch
+
+fun playAudio(audioUrl: String) {
+    try {
+        MediaPlayer().apply {
+            setAudioAttributes(
+                android.media.AudioAttributes.Builder()
+                    .setContentType(android.media.AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .setUsage(android.media.AudioAttributes.USAGE_MEDIA)
+                    .build()
+            )
+            setDataSource(audioUrl)
+            prepareAsync()
+
+            setOnPreparedListener {
+                it.start()
+                Log.d("AudioPlayer", "Playing audio from URL: $audioUrl")
+            }
+
+            setOnCompletionListener {
+                it.release()
+                Log.d("AudioPlayer", "Audio finished and resources released.")
+            }
+        }
+    } catch (e: Exception) {
+        Log.e("AudioPlayer", "Error playing audio: ${e.message}", e)
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,8 +60,8 @@ fun SongDetailScreen(songId: Int, onBackClick: () -> Unit) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     var imageLoaded by remember { mutableStateOf(false) }
-    val context = LocalContext.current
     var activeSongId by LocalActiveSongId.current
+
     val isPlayingThisSong = activeSongId == songId
     val buttonIcon = if (isPlayingThisSong) Icons.Filled.Pause else Icons.Filled.PlayArrow
     val buttonText = if (isPlayingThisSong) "Pause Music" else "Play Song (${song.duration})"
@@ -59,7 +86,6 @@ fun SongDetailScreen(songId: Int, onBackClick: () -> Unit) {
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             AnimatedVisibility(
                 visible = imageLoaded,
                 enter = fadeIn(initialAlpha = 0.3f),
@@ -75,9 +101,7 @@ fun SongDetailScreen(songId: Int, onBackClick: () -> Unit) {
                 )
             }
 
-            LaunchedEffect(Unit) {
-                imageLoaded = true
-            }
+            LaunchedEffect(Unit) { imageLoaded = true }
 
             Spacer(Modifier.height(24.dp))
 
@@ -100,17 +124,17 @@ fun SongDetailScreen(songId: Int, onBackClick: () -> Unit) {
                     scope.launch {
                         if (isPlayingThisSong) {
                             activeSongId = 0
-                            snackbarHostState.showSnackbar(message = "Paused ${song.title}...")
-
+                            snackbarHostState.showSnackbar("Paused ${song.title}...")
                         } else {
-                            playAudio(context, song.audioUrl)
+                            playAudio(song.audioUrl)
                             activeSongId = songId
-
-                            snackbarHostState.showSnackbar(message = "Playing ${song.title}...")
+                            snackbarHostState.showSnackbar("Playing ${song.title}...")
                         }
                     }
                 },
-                modifier = Modifier.fillMaxWidth().height(56.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
             ) {
                 Icon(buttonIcon, contentDescription = buttonText, modifier = Modifier.size(24.dp))
                 Spacer(Modifier.width(8.dp))
