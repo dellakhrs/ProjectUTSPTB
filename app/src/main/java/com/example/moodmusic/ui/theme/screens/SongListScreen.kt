@@ -20,8 +20,12 @@ fun SongListScreen(moodId: Int, onSongClick: (Int) -> Unit, onBackClick: () -> U
     val mood = getMoodById(moodId)
     val songs = getSongsByMoodId(moodId)
     val moodName = mood?.name ?: "Unknown Mood"
-
-    // Menerapkan Tema Dinamis berdasarkan Mood Color
+    MoodMusicTheme(moodColor = mood?.primaryColor) {
+        val topAppBarColors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            titleContentColor = MaterialTheme.colorScheme.onPrimary,
+            navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
+        )
     MoodMusicTheme(moodColor = mood?.primaryColor) {
         Scaffold(
             topBar = {
@@ -35,7 +39,6 @@ fun SongListScreen(moodId: Int, onSongClick: (Int) -> Unit, onBackClick: () -> U
                 )
             },
             floatingActionButton = {
-                // Floating Action Button (Memenuhi prinsip Material Design)
                 FloatingActionButton(onClick = { /* Handle Shuffle Play */ }) {
                     Icon(Icons.Filled.Shuffle, contentDescription = "Shuffle Play")
                 }
@@ -43,10 +46,10 @@ fun SongListScreen(moodId: Int, onSongClick: (Int) -> Unit, onBackClick: () -> U
         ) { padding ->
             LazyColumn(modifier = Modifier.padding(padding)) {
                 items(songs) { song ->
-                    // Memanggil komponen SongListItem yang sudah diimpor
                     SongListItem(song = song, onClick = onSongClick)
                 }
             }
         }
+    }
     }
 }

@@ -12,15 +12,11 @@ import com.example.moodmusic.data.Song
 
 @Composable
 fun SongListItem(song: Song, onClick: (Int) -> Unit) {
-    // Menggunakan ListItem Material 3 untuk tampilan daftar yang terstruktur
     ListItem(
         headlineContent = { Text(song.title) },
         supportingContent = { Text(song.artist) },
-        // Menampilkan durasi lagu di sisi kanan
         trailingContent = { Text(song.duration) },
-        // Memberikan efek klik dan navigasi
         modifier = Modifier.clickable { onClick(song.id) }
     )
-    // Garis pemisah antar item
     HorizontalDivider(Modifier.padding(horizontal = 16.dp))
 }

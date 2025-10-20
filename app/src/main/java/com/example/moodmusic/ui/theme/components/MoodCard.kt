@@ -18,9 +18,8 @@ fun MoodCard(mood: Mood, onClick: (Int) -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .height(120.dp)
-            .clickable { onClick(mood.id) }, // Efek klik (Ripple)
+            .clickable { onClick(mood.id) },
         colors = CardDefaults.cardColors(
-            // Menggunakan warna kustom dari objek Mood
             containerColor = mood.primaryColor.copy(alpha = 0.8f)
         )
     ) {
@@ -32,7 +31,6 @@ fun MoodCard(mood: Mood, onClick: (Int) -> Unit) {
                 Icons.Filled.MusicNote,
                 contentDescription = mood.name,
                 modifier = Modifier.size(48.dp),
-                // Pastikan ikon terlihat jelas di atas warna Card
                 tint = Color.White
             )
             Spacer(Modifier.width(20.dp))

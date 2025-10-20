@@ -16,25 +16,35 @@ import coil.compose.AsyncImage
 import com.example.moodmusic.data.getSongById
 import kotlinx.coroutines.launch
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
+import com.example.moodmusic.playAudio
+import androidx.compose.material.icons.filled.Pause
+import com.example.moodmusic.LocalActiveSongId
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SongDetailScreen(songId: Int, onBackClick: () -> Unit) {
     val song = getSongById(songId)
     if (song == null) {
-        // Menangani lagu tidak ditemukan
         Text("Song Not Found")
         return
     }
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
-
-    // State untuk Animasi Fade-In Gambar Album
     var imageLoaded by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    // AKSES STATE GLOBAL: Dapatkan dan atur ID lagu yang sedang aktif
+    var activeSongId by LocalActiveSongId.current
+    val isPlayingThisSong = activeSongId == songId
+
+    // LOGIKA UI DINAMIS
+    val buttonIcon = if (isPlayingThisSong) Icons.Filled.Pause else Icons.Filled.PlayArrow
+    val buttonText = if (isPlayingThisSong) "Pause Music" else "Play Song (${song.duration})"
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) }, // Host Snackbar
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = { Text(song.title, maxLines = 1) },
@@ -54,10 +64,9 @@ fun SongDetailScreen(songId: Int, onBackClick: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            // Gambar Album dengan Animasi Fade-In
             AnimatedVisibility(
                 visible = imageLoaded,
-                enter = fadeIn(initialAlpha = 0.3f), // Animasi muncul (fade-in)
+                enter = fadeIn(initialAlpha = 0.3f),
                 modifier = Modifier.size(250.dp)
             ) {
                 AsyncImage(
@@ -70,7 +79,6 @@ fun SongDetailScreen(songId: Int, onBackClick: () -> Unit) {
                 )
             }
 
-            // Simulasi tanda bahwa gambar sudah dimuat (gunakan ImageRequest state untuk implementasi riil)
             LaunchedEffect(Unit) {
                 imageLoaded = true
             }
@@ -91,22 +99,26 @@ fun SongDetailScreen(songId: Int, onBackClick: () -> Unit) {
 
             Spacer(Modifier.height(40.dp))
 
-            // Tombol Play
             Button(
                 onClick = {
                     scope.launch {
-                        // Menampilkan Snackbar notifikasi (Memenuhi prinsip Material Design)
-                        snackbarHostState.showSnackbar(
-                            message = "Playing ${song.title}...",
-                            duration = SnackbarDuration.Short
-                        )
+                        if (isPlayingThisSong) {
+                            activeSongId = 0 // Reset state global
+                            snackbarHostState.showSnackbar(message = "Paused ${song.title}...")
+
+                        } else {
+                            playAudio(context, song.audioUrl)
+                            activeSongId = songId
+
+                            snackbarHostState.showSnackbar(message = "Playing ${song.title}...")
+                        }
                     }
                 },
                 modifier = Modifier.fillMaxWidth().height(56.dp)
             ) {
-                Icon(Icons.Filled.PlayArrow, contentDescription = "Play", modifier = Modifier.size(24.dp))
+                Icon(buttonIcon, contentDescription = buttonText, modifier = Modifier.size(24.dp))
                 Spacer(Modifier.width(8.dp))
-                Text("Play Song (${song.duration})")
+                Text(buttonText)
             }
         }
     }
